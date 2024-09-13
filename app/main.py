@@ -14,5 +14,5 @@ app.include_router(plot.router)
 
 @app.get("/")
 @htmx("index")
-def index(request: Request):
+async def index(request: Request):
     pass

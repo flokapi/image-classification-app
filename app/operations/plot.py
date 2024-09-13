@@ -16,4 +16,6 @@ def plot():
     fig.savefig(img_buffer, format="png")
     img_buffer.seek(0)
 
+    plt.close(fig)
+
     return base64.b64encode(img_buffer.read()).decode("utf-8")

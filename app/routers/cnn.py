@@ -18,24 +18,16 @@ async def run(fun, *args, **kwargs):
 
 @router.get("/")
 @htmx("predict_digit")
-def main(request: Request):
+async def main(request: Request):
     pass
 
 
 @router.post("/predict")
 @htmx("predict_digit_result")
 async def cnn_predict(request: Request, file: UploadFile = File(...)):
-    print("=====> predict")
     file_content = await file.read()
     result = await run(cnn.predict, file_content)
     return {"result": result}
-
-# @router.post("/predict")
-# async def cnn_predict(file: UploadFile = File(...)):
-#     print("=====> predict")
-#     file_content = await file.read()
-#     result = await run(cnn.predict, file_content)
-#     return {"result": result}
 
 
 @router.get("/test")

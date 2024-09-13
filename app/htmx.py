@@ -19,8 +19,8 @@ def htmx(template_name):
     def htmx_decorator(func):
 
         @wraps(func)
-        def wrapper(request: Request, *args, **kwargs):
-            data = func(request, *args, **kwargs)
+        async def wrapper(request: Request, *args, **kwargs):
+            data = await func(request, *args, **kwargs)
             if data == None:
                 data = {}
 
