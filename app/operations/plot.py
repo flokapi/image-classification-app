@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import io
 import base64
+from app.templates import templates
 import random
 
 
