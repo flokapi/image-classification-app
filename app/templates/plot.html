@@ -1,0 +1,26 @@
+<div>
+  <p class="text-2xl font-bold mb-4">Plot</p>
+  <button
+    class="px-3 py-1 bg-blue-500 text-white ml-10 mt-2 rounded"
+    hx-get="{{ request.url }}plot"
+    hx-trigger="click"
+    hx-target="#plot-img"
+    hx-swap="outerHTML"
+  >
+    Refresh
+  </button>
+  <div
+    hx-get="{{ request.url }}plot"
+    hx-trigger="load"
+    hx-target="#plot-img"
+    hx-swap="outerHTML"
+  ></div>
+  <div
+    hx-get="{{ request.url }}plot"
+    hx-trigger="every 10s"
+    hx-target="#plot-img"
+    hx-swap="outerHTML"
+  ></div>
+
+  <img id="plot-img" src="" alt="" />
+</div>
