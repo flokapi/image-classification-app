@@ -2,7 +2,6 @@ from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse
 from .templates import templates
 
-from . import api
 from .routers import cnn, plot
 from .htmx import htmx
 
