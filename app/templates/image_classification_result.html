@@ -1,11 +1,12 @@
 <div class="m-4 space-y-6">
+  <p class="text-lg">File: {{ name }}</p>
   <img
     id="prediction-image"
     src="data:image/png;base64,{{ img.base64 }}"
     alt="image"
   />
   <div>
-    <p class="text-lg font-bold">Result: {{ result.classification }}</p>
-    <p class="text-lg font-bold">Yhat: {{ result.value }}</p>
+    <p class="text-lg">Result: {{ result.value }}</p>
+    <p class="text-lg">Yhat: {{ result.yhat }}</p>
   </div>
 </div>

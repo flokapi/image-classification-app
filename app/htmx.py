@@ -11,10 +11,6 @@ def htmx_init(templates_):
     templates = templates_
 
 
-def _is_hx_request(request: Request) -> bool:
-    return "HX-Request" in request.headers
-
-
 def htmx(template_name):
     def htmx_decorator(func):
 
@@ -28,17 +24,6 @@ def htmx(template_name):
             context = {"request": request}
             context.update(data)
             return templates.TemplateResponse(file_name, context)
-
-            # if _is_hx_request(request):
-            #     if template_name == None:
-            #         return HTMLResponse(data)
-            #     else:
-            #         file_name = f"{template_name}.html"
-            #         context = {"request": request}
-            #         context.update(data)
-            #         return templates.TemplateResponse(file_name, context)
-            # else:
-            #     return JSONResponse(content=data)
 
         return wrapper
 

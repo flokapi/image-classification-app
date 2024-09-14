@@ -25,7 +25,7 @@ def predict(file_content):
     resize = tf.image.resize(img, (IMAGE_SIZE_X, IMAGE_SIZE_Y))
     yhat = model.predict(np.expand_dims(resize/255, 0))[0][0]
     if yhat > 0.5:
-        classification = "Sad"
+        value = "Sad"
     else:
-        classification = "Happy"
-    return {"classification": classification, "value": float(yhat)}
+        value = "Happy"
+    return {"value": value, "yhat": float(yhat)}

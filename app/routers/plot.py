@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request
 from fastapi.responses import HTMLResponse
 
 from app.templates import templates
-from app.operations import plot
+from app.operations import plot_predictions as plot
 
 from app.htmx import htmx
 
@@ -20,4 +20,4 @@ async def get_plot(request: Request):
 @htmx("plot_image")
 async def get_plot(request: Request):
     base64_data = plot.plot()
-    return {"img": {"base64": base64_data, "id": "plot-img"}}
+    return {"img": {"base64": base64_data}}

@@ -7,18 +7,10 @@ import cv2
 #     return base64.b64encode(binary_img).decode("utf-8")
 
 
-def resize_image_with_aspect_ratio(image, desired_width=None, desired_height=None):
+def resize_image_with_aspect_ratio(image, desired_width: int):
     (h, w) = image.shape[:2]
-
-    if desired_width is not None and desired_height is None:
-        r = desired_width / float(w)
-        dim = (desired_width, int(h * r))
-    elif desired_width is None and desired_height is not None:
-        r = desired_height / float(h)
-        dim = (int(w * r), desired_height)
-    else:
-        raise ValueError(
-            "You must provide either desired_width or desired_height, but not both.")
+    r = desired_width / float(w)
+    dim = (desired_width, int(h * r))
 
     return cv2.resize(image, dim, interpolation=cv2.INTER_AREA)
 
