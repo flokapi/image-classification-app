@@ -17,6 +17,7 @@ model = None
 def read_image_from_bytes(image_bytes):
     np_array = np.frombuffer(image_bytes, np.uint8)
     img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)[:, :, 0]
+    cv2.imwrite("out.png", img)
     img = img.reshape((1, IMAGE_SIZE_X, IMAGE_SIZE_Y, 1))
     return img
 
