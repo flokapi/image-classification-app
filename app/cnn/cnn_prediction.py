@@ -14,29 +14,18 @@ IMAGE_SIZE_Y = settings.image_size_y
 model = None
 
 
-def read_image_from_bytes(image_bytes):
-    np_array = np.frombuffer(image_bytes, np.uint8)
-    img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)[:, :, 0]
-    cv2.imwrite("out.png", img)
-    img = img.reshape((1, IMAGE_SIZE_X, IMAGE_SIZE_Y, 1))
-    return img
-
-
 def initialize():
     global model
     model = tf.keras.models.load_model(MODEL_PATH)
 
 
 def predict(file_content):
-    print(model)
-
-    img = read_image_from_bytes(file_content)
-    print("========================== img read")
-    prediction = model.predict(img)
-    print("========================== prediction done")
-    print(prediction)
-    result = int(np.argmax(prediction))
-    print("========================== result found")
-    print(result)
-
-    return result
+    np_array = np.frombuffer(file_content, np.uint8)
+    img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
+    resize = tf.image.resize(img, (IMAGE_SIZE_X, IMAGE_SIZE_Y))
+    yhat = model.predict(np.expand_dims(resize/255, 0))[0][0]
+    if yhat > 0.5:
+        classification = "Sad"
+    else:
+        classification = "Happy"
+    return {"classification": classification, "value": float(yhat)}

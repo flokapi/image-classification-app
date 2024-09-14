@@ -1,121 +1,172 @@
-from tensorflow.keras.datasets import mnist
+from tensorflow.keras.models import load_model
+from tensorflow.keras.metrics import Precision, Recall, BinaryAccuracy
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dense, Dropout, BatchNormalization
-from tensorflow.keras.utils import to_categorical
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from matplotlib import pyplot as plt
+import numpy as np
+import imghdr
+import cv2
+import tensorflow as tf
+import os
+
 
 from app.config import settings
 
 
 TF_MODEL_PATH = settings.tf_model_path
-TF_MODEL_EPOCHS = settings.tf_model_epochs
 IMAGE_SIZE_X = settings.image_size_x
 IMAGE_SIZE_Y = settings.image_size_y
 
 
-# Load and prepare data
-(x_train, y_train), (x_test, y_test) = mnist.load_data()
-x_train = x_train.reshape(
-    (x_train.shape[0], IMAGE_SIZE_X, IMAGE_SIZE_Y, 1)).astype('float32') / 255
-x_test = x_test.reshape(
-    (x_test.shape[0], IMAGE_SIZE_X, IMAGE_SIZE_Y, 1)).astype('float32') / 255
-y_train = to_categorical(y_train, 10)
-y_test = to_categorical(y_test, 10)
+# ################ Prepare hardware
 
-# Data augmentation
-datagen = ImageDataGenerator(
-    rotation_range=10,
-    width_shift_range=0.1,
-    height_shift_range=0.1,
-    zoom_range=0.1,
-    horizontal_flip=False,  # Not applicable for MNIST but can be useful for other datasets
-    fill_mode='nearest'
-)
-datagen.fit(x_train)
+# Avoid OOM errors by setting GPU Memory Consumption Growth
+gpus = tf.config.experimental.list_physical_devices('GPU')
+for gpu in gpus:
+    tf.config.experimental.set_memory_growth(gpu, True)
 
-# Build the improved CNN model
-model = Sequential([
-    Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1)),
-    BatchNormalization(),
-    MaxPooling2D((2, 2)),
-    Dropout(0.25),
-
-    Conv2D(64, (3, 3), activation='relu'),
-    BatchNormalization(),
-    MaxPooling2D((2, 2)),
-    Dropout(0.25),
-
-    Conv2D(128, (3, 3), activation='relu'),
-    BatchNormalization(),
-    MaxPooling2D((2, 2)),
-    Dropout(0.25),
-
-    Flatten(),
-    Dense(128, activation='relu'),
-    Dropout(0.5),
-    Dense(10, activation='softmax')
-])
-
-# Compile the model
-model.compile(
-    optimizer='adam',
-    loss='categorical_crossentropy',
-    metrics=['accuracy']
-)
-
-# Train the model with data augmentation
-model.fit(datagen.flow(x_train, y_train, batch_size=64),
-          epochs=TF_MODEL_EPOCHS,
-          validation_data=(x_test, y_test))
-
-# Evaluate the model
-test_loss, test_acc = model.evaluate(x_test, y_test)
-print(f"Test accuracy: {test_acc}")
-
-model.save(TF_MODEL_PATH)
+tf.config.list_physical_devices('GPU')
 
 
-# import tensorflow as tf
+# ################ Check images
 
-# MODEL_PATH = settings.tf_model_path
-# TF_MODEL_EPOCHS = settings.tf_model_epochs
-# IMAGE_SIZE_X = settings.image_size_x
-# IMAGE_SIZE_Y = settings.image_size_y
+data_dir = 'data'
 
+image_exts = ['jpeg', 'jpg', 'bmp', 'png']
 
-# def create_model():
-#     model = tf.keras.Sequential([
-#         tf.keras.layers.Conv2D(32, kernel_size=(
-#             3, 3), activation='relu', input_shape=(IMAGE_SIZE_X, IMAGE_SIZE_Y, 1)),
-#         tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
-#         tf.keras.layers.Conv2D(64, kernel_size=(3, 3), activation='relu'),
-#         tf.keras.layers.MaxPooling2D(pool_size=(2, 2)),
-#         tf.keras.layers.Flatten(),
-#         tf.keras.layers.Dense(128, activation='relu'),
-#         tf.keras.layers.Dense(10, activation='softmax')
-#     ])
-
-#     model.compile(optimizer='adam',
-#                   loss='sparse_categorical_crossentropy', metrics=['accuracy'])
-#     return model
+for image_class in os.listdir(data_dir):
+    for image in os.listdir(os.path.join(data_dir, image_class)):
+        image_path = os.path.join(data_dir, image_class, image)
+        try:
+            img = cv2.imread(image_path)
+            tip = imghdr.what(image_path)
+            if tip not in image_exts:
+                print('Image not in ext list {}'.format(image_path))
+                os.remove(image_path)
+        except Exception as e:
+            print('Issue with image {}'.format(image_path))
+            # os.remove(image_path)
 
 
-# def train_model(model, x_train, y_train, x_test, y_test, epochs=TF_MODEL_EPOCHS):
-#     model.fit(x_train, y_train, validation_data=(
-#         x_test, y_test), epochs=epochs)
+# ################ Load images
+
+data = tf.keras.utils.image_dataset_from_directory('data')
+
+data_iterator = data.as_numpy_iterator()
+
+batch = data_iterator.next()
+
+# fig, ax = plt.subplots(ncols=4, figsize=(20, 20))
+# for idx, img in enumerate(batch[0][:4]):
+#     ax[idx].imshow(img.astype(int))
+#     ax[idx].title.set_text(batch[1][idx])
 
 
-# def init():
-#     (x_train, y_train), (x_test, y_test) = tf.keras.datasets.mnist.load_data()
-#     x_train, x_test = x_train / 255.0, x_test / 255.0
-#     x_train = x_train[..., tf.newaxis]
-#     x_test = x_test[..., tf.newaxis]
+# ################ Scale data
 
-#     print("================== creating model")
-#     model = create_model()
-#     train_model(model, x_train, y_train, x_test, y_test)
-#     model.save(MODEL_PATH)
+data = data.map(lambda x, y: (x/255, y))
+
+data.as_numpy_iterator().next()
 
 
-# if __name__ == "__main__":
-#     init()
+# ################ Split data
+
+train_size = int(len(data)*.7)
+val_size = int(len(data)*.2)
+test_size = int(len(data)*.1)
+
+train_size
+
+train = data.take(train_size)
+val = data.skip(train_size).take(val_size)
+test = data.skip(train_size+val_size).take(test_size)
+
+
+# ################ Build the model
+
+model = Sequential()
+
+model.add(Conv2D(16, (3, 3), 1, activation='relu',
+          input_shape=(IMAGE_SIZE_X, IMAGE_SIZE_Y, 3)))
+model.add(MaxPooling2D())
+model.add(Conv2D(32, (3, 3), 1, activation='relu'))
+model.add(MaxPooling2D())
+model.add(Conv2D(16, (3, 3), 1, activation='relu'))
+model.add(MaxPooling2D())
+model.add(Flatten())
+model.add(Dense(256, activation='relu'))
+model.add(Dense(1, activation='sigmoid'))
+
+model.compile('adam', loss=tf.losses.BinaryCrossentropy(),
+              metrics=['accuracy'])
+
+model.summary()
+
+
+logdir = 'logs'
+
+tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
+
+hist = model.fit(train, epochs=20, validation_data=val,
+                 callbacks=[tensorboard_callback])
+
+
+# ################ Model properties
+
+# fig = plt.figure()
+# plt.plot(hist.history['loss'], color='teal', label='loss')
+# plt.plot(hist.history['val_loss'], color='orange', label='val_loss')
+# fig.suptitle('Loss', fontsize=20)
+# plt.legend(loc="upper left")
+# plt.show()
+
+# fig = plt.figure()
+# plt.plot(hist.history['accuracy'], color='teal', label='accuracy')
+# plt.plot(hist.history['val_accuracy'], color='orange', label='val_accuracy')
+# fig.suptitle('Accuracy', fontsize=20)
+# plt.legend(loc="upper left")
+# plt.show()
+
+
+# pre = Precision()
+# re = Recall()
+# acc = BinaryAccuracy()
+
+
+# for batch in test.as_numpy_iterator():
+#     X, y = batch
+#     yhat = model.predict(X)
+#     pre.update_state(y, yhat)
+#     re.update_state(y, yhat)
+#     acc.update_state(y, yhat)
+
+
+# print(pre.result(), re.result(), acc.result())
+
+
+# ################ Make a prediction
+
+# img = cv2.imread('8iAb9k4aT.jpg')
+# plt.imshow(img)
+# plt.show()
+
+# resize = tf.image.resize(img, (256, 256))
+# plt.imshow(resize.numpy().astype(int))
+# plt.show()
+
+# yhat = model.predict(np.expand_dims(resize/255, 0))
+
+
+# if yhat > 0.5:
+#     print(f'Predicted class is Sad')
+# else:
+#     print(f'Predicted class is Happy')
+
+
+# ################ Save the model
+
+model.save(os.path.join(TF_MODEL_PATH))
+
+# new_model = load_model(TF_MODEL_PATH)
+
+# new_model.predict(np.expand_dims(resize/255, 0))
