@@ -1,8 +1,6 @@
 import matplotlib.pyplot as plt
 import io
 import base64
-from app.templates import templates
-import random
 
 
 predictions = []
@@ -24,12 +22,12 @@ def plot():
         linestyle='None',
         markersize=10.0
     )
-    ax.set_title('Evaluations')
+    ax.set_title('Result')
     ax.set_xlabel('Images')
     ax.set_ylabel('Prediction')
-    ax.set_ylim([0, 2])
+    ax.set_ylim([-0.1, 2])
 
-    ax.set_yticks([0, 1])
+    ax.set_yticks([-0, 1])
     ax.set_yticklabels(["Happy", "Sad"])
 
     for i in range(len(predictions)):
