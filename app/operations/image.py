@@ -22,7 +22,6 @@ def resize_image_with_aspect_ratio(image, desired_width: int, max_height: int):
 def binary_to_base64(binary_img):
     np_array = np.frombuffer(binary_img, np.uint8)
     img = cv2.imdecode(np_array, cv2.IMREAD_COLOR)
-    # resize = cv2.resize(img, (256, 256))
     img = resize_image_with_aspect_ratio(
         img, desired_width=500, max_height=400)
     _, buffer = cv2.imencode('.jpg', img)
