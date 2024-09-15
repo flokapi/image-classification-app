@@ -1,35 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Image Classifcation</title>
-    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
-    <script src="https://cdn.tailwindcss.com"></script>
-  </head>
-  <body>
-    <div id="header" class="lg:hidden bg-gray-800 text-white p-4">
-      {% include 'title.html' %} {% include 'menu.html' %}
-    </div>
-    <div class="flex">
-      <div
-        id="sidebar"
-        class="hidden lg:block lg:w-64 lg:h-screen lg:bg-gray-800 lg:text-white lg:p-4"
-      >
-        {% include 'title.html' %} {% include 'menu.html' %}
-      </div>
-      <div id="content" class="flex-1 p-6">
-        <!-- Dynamic content will be loaded here -->
-      </div>
-    </div>
-    <!--
-    <div class="flex-1 p-4"></div>
-      <div class="m-4 p-4 border-2 rounded">
-        <div hx-get="/image-classification" hx-trigger="load"></div>
-      </div>
-      <div class="m-4 p-4 border-2 rounded">
-        <div hx-get="/plot" hx-trigger="load"></div>
-      </div>
-    </div> -->
-  </body>
-</html>
+{% extends "base.html" %} {% block content %}
+<div>
+  <p class="text-3xl font-bold mb-12">Home</p>
+</div>
+{% endblock %}

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Image Classifcation</title>
+    <script src="https://unpkg.com/htmx.org@1.6.1"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body>
+    <div id="header" class="lg:hidden bg-gray-800 text-white p-4">
+      {% include 'title.html' %} {% include 'menu.html' %}
+    </div>
+    <div class="flex">
+      <div
+        id="sidebar"
+        class="hidden lg:block lg:w-64 lg:h-screen lg:bg-gray-800 lg:text-white lg:p-4"
+      >
+        {% include 'title.html' %} {% include 'menu.html' %}
+      </div>
+
+      <div class="p-6">
+        {% block content %}
+        <!-- Content will be injected here -->
+        {% endblock %}
+      </div>
+    </div>
+  </body>
+</html>
