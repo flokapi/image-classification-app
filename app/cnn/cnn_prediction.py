@@ -3,13 +3,17 @@ import cv2
 import tensorflow as tf
 import numpy as np
 from matplotlib import pyplot as plt
+from pathlib import Path
 
 from app.config import settings
 
 
-MODEL_PATH = settings.tf_model_path
+TF_MODEL_FILE_NAME = settings.tf_model_file_name
+FILES_LOCATION = settings.files_location
 IMAGE_SIZE_X = settings.image_size_x
 IMAGE_SIZE_Y = settings.image_size_y
+
+MODEL_PATH = Path(FILES_LOCATION).joinpath(TF_MODEL_FILE_NAME)
 
 model = None
 

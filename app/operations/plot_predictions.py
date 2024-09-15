@@ -19,7 +19,6 @@ def format_label(text):
 
 
 def add_prediction(new_prediction):
-    # predictions.append(new_prediction)
     predictions.insert(0, new_prediction)
 
 
@@ -35,7 +34,7 @@ def plot():
         linestyle='None',
         markersize=10.0
     )
-    ax.set_title('Last evaluations')
+    ax.set_title('Last predictions')
     ax.set_xlabel('Images')
     ax.set_ylabel('Prediction')
     ax.set_xlim([-21, 1])
@@ -53,6 +52,8 @@ def plot():
         text = format_label(predictions[i][0])
         ax.annotate(text, (x[i], y[i]+0.1), textcoords="offset points", xytext=(
             5, 0), ha='center', rotation=90)
+
+    plt.tight_layout()
 
     img_buffer = io.BytesIO()
     fig.savefig(img_buffer, format="png")

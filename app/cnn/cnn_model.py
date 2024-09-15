@@ -8,12 +8,17 @@ import imghdr
 import cv2
 import tensorflow as tf
 import os
+from pathlib import Path
 
 
 from app.config import settings
 
 
-TF_MODEL_PATH = settings.tf_model_path
+FILES_LOCATION = Path(settings.files_location)
+TF_MODEL_PATH = FILES_LOCATION.joinpath(settings.tf_model_file_name)
+LOSS_PLOT_PATH = FILES_LOCATION.joinpath(settings.loss_plot_file_name)
+ACCURACY_PLOT_PATH = FILES_LOCATION.joinpath(settings.accuracy_plot_file_name)
+TF_MODEL_EPOCHS = settings.tf_model_epochs
 IMAGE_SIZE_X = settings.image_size_x
 IMAGE_SIZE_Y = settings.image_size_y
 
@@ -107,41 +112,55 @@ logdir = 'logs'
 
 tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=logdir)
 
-hist = model.fit(train, epochs=20, validation_data=val,
+hist = model.fit(train, epochs=TF_MODEL_EPOCHS, validation_data=val,
                  callbacks=[tensorboard_callback])
 
 
 # ################ Model properties
 
-# fig = plt.figure()
-# plt.plot(hist.history['loss'], color='teal', label='loss')
-# plt.plot(hist.history['val_loss'], color='orange', label='val_loss')
-# fig.suptitle('Loss', fontsize=20)
-# plt.legend(loc="upper left")
+fig, ax = plt.subplots()
+ax.plot(hist.history['loss'], color='teal', label='loss')
+ax.plot(hist.history['val_loss'], color='orange', label='val_loss')
+ax.set_title('Loss', fontsize=20)
+ax.set_xlabel('Epoch')
+ax.set_ylabel('Loss')
+plt.legend(loc="upper left")
+plt.tight_layout()
+fig.savefig(LOSS_PLOT_PATH)
 # plt.show()
 
-# fig = plt.figure()
-# plt.plot(hist.history['accuracy'], color='teal', label='accuracy')
-# plt.plot(hist.history['val_accuracy'], color='orange', label='val_accuracy')
-# fig.suptitle('Accuracy', fontsize=20)
-# plt.legend(loc="upper left")
+fig, ax = plt.subplots()
+ax.plot(hist.history['accuracy'], color='teal', label='accuracy')
+ax.plot(hist.history['val_accuracy'], color='orange', label='val_accuracy')
+ax.set_title('Accuracy', fontsize=20)
+ax.set_xlabel('Epoch')
+ax.set_ylabel('Accuracy')
+plt.legend(loc="upper left")
+plt.tight_layout()
+fig.savefig(ACCURACY_PLOT_PATH)
 # plt.show()
 
 
-# pre = Precision()
-# re = Recall()
-# acc = BinaryAccuracy()
+pre = Precision()
+re = Recall()
+acc = BinaryAccuracy()
 
 
-# for batch in test.as_numpy_iterator():
-#     X, y = batch
-#     yhat = model.predict(X)
-#     pre.update_state(y, yhat)
-#     re.update_state(y, yhat)
-#     acc.update_state(y, yhat)
+for batch in test.as_numpy_iterator():
+    X, y = batch
+    yhat = model.predict(X)
+    pre.update_state(y, yhat)
+    re.update_state(y, yhat)
+    acc.update_state(y, yhat)
 
 
 # print(pre.result(), re.result(), acc.result())
+
+model_properties = {
+    "precision": pre.result(),
+    "recall": re.result(),
+    "accuracy": acc.result()
+}
 
 
 # ################ Make a prediction
@@ -165,7 +184,7 @@ hist = model.fit(train, epochs=20, validation_data=val,
 
 # ################ Save the model
 
-model.save(os.path.join(TF_MODEL_PATH))
+model.save(TF_MODEL_PATH)
 
 # new_model = load_model(TF_MODEL_PATH)
 

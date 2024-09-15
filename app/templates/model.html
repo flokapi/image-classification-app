@@ -1,5 +1,32 @@
 {% extends "base.html" %} {% block content %}
 <div>
   <p class="text-3xl font-bold mb-12">Model</p>
+  <div class="space-y-12 m-4">
+    <div>
+      <p class="text-xl font-bold mb-5">Download</p>
+      <span>
+        Model:
+        <a
+          class="underline text-blue-500"
+          href="/files/{{ model_file_name }}"
+          download="filename.pdf"
+          >model.keras</a
+        >
+      </span>
+    </div>
+    <div>
+      <p class="text-xl font-bold mb-5">Properties</p>
+      <img
+        id="prediction-image"
+        src="/files/{{ loss_plot_file_name }}"
+        alt="image"
+      />
+      <img
+        id="prediction-image"
+        src="/files/{{ accuracy_plot_file_name }}"
+        alt="image"
+      />
+    </div>
+  </div>
 </div>
 {% endblock %}
