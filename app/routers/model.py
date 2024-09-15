@@ -18,7 +18,7 @@ router = APIRouter(prefix="/model", tags=["Model"])
 
 @router.get("/")
 @htmx("model")
-async def get_model(request: Request):
+async def hx_get_main(request: Request):
     return {
         "model_file_name": TF_MODEL_FILE_NAME,
         "loss_plot_file_name": LOSS_PLOT_FILE_NAME,

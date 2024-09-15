@@ -13,6 +13,9 @@ import app.operations.plot_predictions as plot
 router = APIRouter(prefix="/prediction",
                    tags=["Prediction"])
 
+executor = ProcessPoolExecutor(
+    max_workers=4, initializer=cnn.initialize)
+
 
 async def run(fun, *args, **kwargs):
     loop = asyncio.get_event_loop()
@@ -21,13 +24,13 @@ async def run(fun, *args, **kwargs):
 
 @router.get("/")
 @htmx("prediction")
-async def hx_main(request: Request):
+async def hx_get_main(request: Request):
     pass
 
 
 @router.post("/hx-predict")
 @htmx("prediction_result")
-async def hx_cnn_predict(request: Request, file: UploadFile = File(...)):
+async def hx_post_predict(request: Request, file: UploadFile = File(...)):
     file_content = await file.read()
     base64_image = await run(image.binary_to_base64, file_content)
     result = await run(cnn.predict, file_content)
@@ -37,12 +40,8 @@ async def hx_cnn_predict(request: Request, file: UploadFile = File(...)):
 
 
 @router.post("/predict")
-async def cnn_predict(file: UploadFile = File(...)):
+async def post_predict(file: UploadFile = File(...)):
     file_content = await file.read()
     result = await run(cnn.predict, file_content)
     plot.add_prediction((file.filename, result["yhat"]))
     return {"result": result, "name": file.filename}
-
-
-executor = ProcessPoolExecutor(
-    max_workers=4, initializer=cnn.initialize)
