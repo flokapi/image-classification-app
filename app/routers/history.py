@@ -1,5 +1,4 @@
 from fastapi import APIRouter, Request
-from fastapi.responses import HTMLResponse
 
 from app.templates import templates
 from app.operations import plot_predictions as plot

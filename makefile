@@ -3,5 +3,5 @@ model:
 	@python3 -m app.cnn.cnn_model
 
 
-api:
+dev:
 	@uvicorn app.main:app --reload

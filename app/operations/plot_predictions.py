@@ -19,11 +19,12 @@ def format_label(text):
 
 
 def add_prediction(new_prediction):
-    predictions.append(new_prediction)
+    # predictions.append(new_prediction)
+    predictions.insert(0, new_prediction)
 
 
 def plot():
-    x = [i for i in range(len(predictions))]
+    x = [-i for i in range(len(predictions))]
     y = [p[1] for p in predictions]
 
     fig, ax = plt.subplots()
@@ -34,13 +35,19 @@ def plot():
         linestyle='None',
         markersize=10.0
     )
-    ax.set_title('Result')
+    ax.set_title('Last evaluations')
     ax.set_xlabel('Images')
     ax.set_ylabel('Prediction')
+    ax.set_xlim([-21, 1])
     ax.set_ylim([-0.1, 2])
 
+    ax.set_xticks([-2*i for i in range(11)])
     ax.set_yticks([-0, 1])
     ax.set_yticklabels(["Happy", "Sad"])
+
+    plt.axhline(y=0, color="gray", linestyle='--', linewidth=0.5)
+    plt.axhline(y=0.5, color="gray", linestyle='--', linewidth=0.5)
+    plt.axhline(y=1, color="gray", linestyle='--', linewidth=0.5)
 
     for i in range(len(predictions)):
         text = format_label(predictions[i][0])
