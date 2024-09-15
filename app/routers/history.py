@@ -7,7 +7,7 @@ from app.operations import plot_predictions as plot
 from app.htmx import htmx
 
 
-router = APIRouter(prefix="/plot", tags=["Plot"])
+router = APIRouter(prefix="/history", tags=["History"])
 
 
 @router.get("/")

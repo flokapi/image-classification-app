@@ -1,11 +1,28 @@
-<div class="space-y-8 m-4">
+<div class="space-y-8">
   <p class="text-3xl font-bold mb-4">Evaluate Image</p>
-  <form id="upload-form" hx-post="{{ request.url }}hx-predict" hx-target="#prediction-result" hx-swap="innerHTML" hx-encoding="multipart/form-data" enctype="multipart/form-data">
-    <input  type="file" name="file" id="file-input" class="hidden" required>
-    <label for="file-input" class="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
-      Select File
-    </label>
-    <button type="submit" class="px-4 py-2 bg-blue-500 text-white ml-6 mt-2 rounded hover:bg-blue-600">Evaluate</button>
-  </form>
-  <div id="prediction-result"></div>
+  <div class="m-4">
+    <form
+      id="upload-form"
+      hx-post="{{ request.url }}hx-predict"
+      hx-target="#prediction-result"
+      hx-swap="innerHTML"
+      hx-encoding="multipart/form-data"
+      enctype="multipart/form-data"
+    >
+      <input type="file" name="file" id="file-input" class="hidden" required />
+      <label
+        for="file-input"
+        class="cursor-pointer bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+      >
+        Select File
+      </label>
+      <button
+        type="submit"
+        class="px-4 py-2 bg-blue-500 text-white ml-6 mt-2 rounded hover:bg-blue-600"
+      >
+        Evaluate
+      </button>
+    </form>
+    <div id="prediction-result"></div>
+  </div>
 </div>

@@ -6,6 +6,18 @@ import base64
 predictions = []
 
 
+# --------------------- private
+
+def format_label(text):
+    if len(text) > 20:
+        return f"{text[:10]}...{text[-6:]}"
+    else:
+        return text
+
+
+# --------------------- public
+
+
 def add_prediction(new_prediction):
     predictions.append(new_prediction)
 
@@ -31,7 +43,8 @@ def plot():
     ax.set_yticklabels(["Happy", "Sad"])
 
     for i in range(len(predictions)):
-        ax.annotate(predictions[i][0], (x[i], y[i]+0.1), textcoords="offset points", xytext=(
+        text = format_label(predictions[i][0])
+        ax.annotate(text, (x[i], y[i]+0.1), textcoords="offset points", xytext=(
             5, 0), ha='center', rotation=90)
 
     img_buffer = io.BytesIO()
