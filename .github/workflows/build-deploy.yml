@@ -29,7 +29,7 @@ jobs:
     #       --health-timeout 5s
     #       --health-retries 5
 
-    runs-on: ubuntu-latest
+    runs-on: tensorflow-latest
     steps:
       - name: pulling git repo
         uses: actions/checkout@v2
