@@ -180,11 +180,14 @@ def evaluate_model_props(hist, test_data, model):
 
 
 def make_prediction(image_path):
+    im_size_x = IMAGE_SIZE_X
+    im_size_y = IMAGE_SIZE_Y
+
     img = cv2.imread(image_path)
     plt.imshow(img)
     plt.show()
 
-    resize = tf.image.resize(img, (256, 256))
+    resize = tf.image.resize(img, (im_size_x, im_size_y))
     plt.imshow(resize.numpy().astype(int))
     plt.show()
 
@@ -201,9 +204,9 @@ def prepare_model():
     train_data, test_data, validation_data = init_data()
     model = create_model()
     hist = fit_model(model, train_data, validation_data)
-    evaluate_model_props(hist, test_data, model)
+    props = evaluate_model_props(hist, test_data, model)
     model.save(TF_MODEL_PATH)
-    return model
+    return model, props
 
 
 if __name__ == "__main__":
