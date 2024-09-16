@@ -28,8 +28,6 @@ SUPPORTED_IMAGES_EXT = ['jpeg', 'jpg', 'bmp', 'png']
 
 
 def init_hardware():
-    # ################ Prepare hardware
-
     # Avoid OOM errors by setting GPU Memory Consumption Growth
     gpus = tf.config.experimental.list_physical_devices('GPU')
     for gpu in gpus:
@@ -38,58 +36,66 @@ def init_hardware():
     tf.config.list_physical_devices('GPU')
 
 
-def init_data(data_dir, image_exts):
-    # ################ Check images
+def init_data():
+    data_dir = TRAIN_DATA_DIR
+    images_ext = SUPPORTED_IMAGES_EXT
 
-    for image_class in os.listdir(data_dir):
-        for image in os.listdir(os.path.join(data_dir, image_class)):
-            image_path = os.path.join(data_dir, image_class, image)
-            try:
-                img = cv2.imread(image_path)
-                tip = imghdr.what(image_path)
-                if tip not in image_exts:
-                    print('Image not in ext list {}'.format(image_path))
-                    os.remove(image_path)
-            except Exception as e:
-                print('Issue with image {}'.format(image_path))
-                # os.remove(image_path)
+    def check_data():
+        for image_class in os.listdir(data_dir):
+            for image in os.listdir(os.path.join(data_dir, image_class)):
+                image_path = os.path.join(data_dir, image_class, image)
+                try:
+                    img = cv2.imread(image_path)
+                    tip = imghdr.what(image_path)
+                    if tip not in images_ext:
+                        print('Image not in ext list {}'.format(image_path))
+                        os.remove(image_path)
+                except Exception as e:
+                    print('Issue with image {}'.format(image_path))
+                    # os.remove(image_path)
 
-    # ################ Load images
+    def load_data():
+        data = tf.keras.utils.image_dataset_from_directory(data_dir)
 
-    data = tf.keras.utils.image_dataset_from_directory('data')
+        data_iterator = data.as_numpy_iterator()
 
-    data_iterator = data.as_numpy_iterator()
+        batch = data_iterator.next()
 
-    batch = data_iterator.next()
+        # fig, ax = plt.subplots(ncols=4, figsize=(20, 20))
+        # for idx, img in enumerate(batch[0][:4]):
+        #     ax[idx].imshow(img.astype(int))
+        #     ax[idx].title.set_text(batch[1][idx])
 
-    # fig, ax = plt.subplots(ncols=4, figsize=(20, 20))
-    # for idx, img in enumerate(batch[0][:4]):
-    #     ax[idx].imshow(img.astype(int))
-    #     ax[idx].title.set_text(batch[1][idx])
+        return data
 
-    # ################ Scale data
+    def scale_data(data):
+        data = data.map(lambda x, y: (x/255, y))
 
-    data = data.map(lambda x, y: (x/255, y))
+        data.as_numpy_iterator().next()
 
-    data.as_numpy_iterator().next()
+    def split_data(data):
 
-    # ################ Split data
+        train_size = int(len(data)*.7)
+        val_size = int(len(data)*.2)
+        test_size = int(len(data)*.1)
 
-    train_size = int(len(data)*.7)
-    val_size = int(len(data)*.2)
-    test_size = int(len(data)*.1)
+        train_size
 
-    train_size
+        train_data = data.take(train_size)
+        validation_data = data.skip(train_size).take(val_size)
+        test_data = data.skip(train_size+val_size).take(test_size)
 
-    train_data = data.take(train_size)
-    validation_data = data.skip(train_size).take(val_size)
-    test_data = data.skip(train_size+val_size).take(test_size)
+        return train_data, test_data, validation_data
 
-    return train_data, test_data, validation_data
+    check_data()
+    data = load_data()
+    scale_data(data)
+    return split_data(data)
 
 
-def create_model(im_size_x, im_size_y):
-    # ################ Build the model
+def create_model():
+    im_size_x = IMAGE_SIZE_X
+    im_size_y = IMAGE_SIZE_Y
 
     model = Sequential()
 
@@ -112,9 +118,11 @@ def create_model(im_size_x, im_size_y):
     return model
 
 
-def fit_model(model, train_data, validation_data, nb_epochs, log_dir):
-    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir)
+def fit_model(model, train_data, validation_data):
+    log_dir = LOG_DATA_DIR
+    nb_epochs = TF_MODEL_EPOCHS
 
+    tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir)
     hist = model.fit(train_data,
                      epochs=nb_epochs,
                      validation_data=validation_data,
@@ -123,8 +131,9 @@ def fit_model(model, train_data, validation_data, nb_epochs, log_dir):
     return hist
 
 
-def evaluate_model_props(hist, test_data, model, plot_loss_path, accuracy_plot_path):
-    # ################ Model properties
+def evaluate_model_props(hist, test_data, model):
+    loss_plot_path = LOSS_PLOT_PATH
+    accuracy_plot_path = ACCURACY_PLOT_PATH
 
     fig, ax = plt.subplots()
     ax.plot(hist.history['loss'], color='teal', label='loss')
@@ -134,7 +143,7 @@ def evaluate_model_props(hist, test_data, model, plot_loss_path, accuracy_plot_p
     ax.set_ylabel('Loss')
     plt.legend(loc="upper left")
     plt.tight_layout()
-    fig.savefig(plot_loss_path)
+    fig.savefig(loss_plot_path)
     # plt.show()
 
     fig, ax = plt.subplots()
@@ -167,43 +176,32 @@ def evaluate_model_props(hist, test_data, model, plot_loss_path, accuracy_plot_p
         "accuracy": acc.result()
     }
 
-
-# ################ Make a prediction
-
-# img = cv2.imread('8iAb9k4aT.jpg')
-# plt.imshow(img)
-# plt.show()
-
-# resize = tf.image.resize(img, (256, 256))
-# plt.imshow(resize.numpy().astype(int))
-# plt.show()
-
-# yhat = model.predict(np.expand_dims(resize/255, 0))
+    return model_properties
 
 
-# if yhat > 0.5:
-#     print(f'Predicted class is Sad')
-# else:
-#     print(f'Predicted class is Happy')
+def make_prediction(image_path):
+    img = cv2.imread(image_path)
+    plt.imshow(img)
+    plt.show()
 
+    resize = tf.image.resize(img, (256, 256))
+    plt.imshow(resize.numpy().astype(int))
+    plt.show()
 
-# ################ Save the model
+    yhat = model.predict(np.expand_dims(resize/255, 0))
 
-
-# new_model = load_model(TF_MODEL_PATH)
-
-# new_model.predict(np.expand_dims(resize/255, 0))
+    if yhat > 0.5:
+        print(f'Predicted class is Sad')
+    else:
+        print(f'Predicted class is Happy')
 
 
 def prepare_model():
     init_hardware()
-    train_data, test_data, validation_data = init_data(
-        TRAIN_DATA_DIR, SUPPORTED_IMAGES_EXT)
-    model = create_model(IMAGE_SIZE_X, IMAGE_SIZE_Y)
-    hist = fit_model(model, train_data, validation_data,
-                     TF_MODEL_EPOCHS, LOG_DATA_DIR)
-    evaluate_model_props(hist, test_data, model,
-                         LOSS_PLOT_PATH, ACCURACY_PLOT_PATH)
+    train_data, test_data, validation_data = init_data()
+    model = create_model()
+    hist = fit_model(model, train_data, validation_data)
+    evaluate_model_props(hist, test_data, model)
     model.save(TF_MODEL_PATH)
     return model
 
