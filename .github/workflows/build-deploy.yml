@@ -29,7 +29,7 @@ jobs:
     #       --health-timeout 5s
     #       --health-retries 5
 
-    runs-on: tensorflow-latest
+    runs-on: ubuntu-latest
     steps:
       - name: pulling git repo
         uses: actions/checkout@v2
@@ -41,6 +41,8 @@ jobs:
           python-version: "3.12"
       - name: update pip
         run: python -m pip install --upgrade pip
+      - name: install tensorflow
+        run: pip install tensorflow
       - name: install all dependencies
         run: pip install -r requirements.txt
       - name: test with pytest
