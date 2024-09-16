@@ -7,7 +7,7 @@ class Settings(BaseSettings):
     tf_model_epochs: int
     image_size_x: int
     image_size_y: int
-    files_location: str
+    static_files_location: str
     loss_plot_file_name: str
     accuracy_plot_file_name: str
 

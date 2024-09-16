@@ -9,11 +9,11 @@ from app.config import settings
 
 
 TF_MODEL_FILE_NAME = settings.tf_model_file_name
-FILES_LOCATION = settings.files_location
+STATIC_FILES_LOCATION = settings.static_files_location
 IMAGE_SIZE_X = settings.image_size_x
 IMAGE_SIZE_Y = settings.image_size_y
 
-MODEL_PATH = Path(FILES_LOCATION).joinpath(TF_MODEL_FILE_NAME)
+MODEL_PATH = Path(STATIC_FILES_LOCATION).joinpath(TF_MODEL_FILE_NAME)
 
 model = None
 

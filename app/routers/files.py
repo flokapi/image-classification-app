@@ -4,7 +4,7 @@ from fastapi.responses import FileResponse
 from app.config import settings
 
 
-FILES_LOCATION = settings.files_location
+FILES_LOCATION = settings.static_files_location
 
 
 router = APIRouter(prefix="/files", tags=["Files"])

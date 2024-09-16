@@ -14,10 +14,11 @@ from pathlib import Path
 from app.config import settings
 
 
-FILES_LOCATION = Path(settings.files_location)
-TF_MODEL_PATH = FILES_LOCATION.joinpath(settings.tf_model_file_name)
-LOSS_PLOT_PATH = FILES_LOCATION.joinpath(settings.loss_plot_file_name)
-ACCURACY_PLOT_PATH = FILES_LOCATION.joinpath(settings.accuracy_plot_file_name)
+STATIC_FILES_LOCATION = Path(settings.static_files_location)
+TF_MODEL_PATH = STATIC_FILES_LOCATION.joinpath(settings.tf_model_file_name)
+LOSS_PLOT_PATH = STATIC_FILES_LOCATION.joinpath(settings.loss_plot_file_name)
+ACCURACY_PLOT_PATH = STATIC_FILES_LOCATION.joinpath(
+    settings.accuracy_plot_file_name)
 TF_MODEL_EPOCHS = settings.tf_model_epochs
 IMAGE_SIZE_X = settings.image_size_x
 IMAGE_SIZE_Y = settings.image_size_y
@@ -38,7 +39,7 @@ def init_hardware():
 
 def init_data():
     data_dir = TRAIN_DATA_DIR
-    images_ext = SUPPORTED_IMAGES_EXT
+    image_exts = SUPPORTED_IMAGES_EXT
 
     def check_data():
         for image_class in os.listdir(data_dir):
@@ -47,7 +48,7 @@ def init_data():
                 try:
                     img = cv2.imread(image_path)
                     tip = imghdr.what(image_path)
-                    if tip not in images_ext:
+                    if tip not in image_exts:
                         print('Image not in ext list {}'.format(image_path))
                         os.remove(image_path)
                 except Exception as e:
@@ -73,6 +74,8 @@ def init_data():
 
         data.as_numpy_iterator().next()
 
+        return data
+
     def split_data(data):
 
         train_size = int(len(data)*.7)
@@ -85,11 +88,11 @@ def init_data():
         validation_data = data.skip(train_size).take(val_size)
         test_data = data.skip(train_size+val_size).take(test_size)
 
-        return train_data, test_data, validation_data
+        return train_data, validation_data, test_data
 
     check_data()
     data = load_data()
-    scale_data(data)
+    data = scale_data(data)
     return split_data(data)
 
 
@@ -131,7 +134,7 @@ def fit_model(model, train_data, validation_data):
     return hist
 
 
-def evaluate_model_props(hist, test_data, model):
+def create_training_data_plots(hist):
     loss_plot_path = LOSS_PLOT_PATH
     accuracy_plot_path = ACCURACY_PLOT_PATH
 
@@ -157,6 +160,8 @@ def evaluate_model_props(hist, test_data, model):
     fig.savefig(accuracy_plot_path)
     # plt.show()
 
+
+def evaluate_model_props(test_data, model):
     pre = Precision()
     re = Recall()
     acc = BinaryAccuracy()
@@ -200,12 +205,15 @@ def make_prediction(image_path):
 
 
 def prepare_model():
+    model_path = TF_MODEL_PATH
+
     init_hardware()
-    train_data, test_data, validation_data = init_data()
+    train_data, validation_data, test_data = init_data()
     model = create_model()
     hist = fit_model(model, train_data, validation_data)
-    props = evaluate_model_props(hist, test_data, model)
-    model.save(TF_MODEL_PATH)
+    create_training_data_plots(hist)
+    props = evaluate_model_props(test_data, model)
+    model.save(model_path)
     return model, props
 
 
