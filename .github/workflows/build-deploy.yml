@@ -111,5 +111,5 @@ jobs:
           password: ${{secrets.PROD_PASSWORD}}
           script: |
             docker build -t img_cls:latest .
-            docker run --rm img_cls:latest
+            docker run --rm -p 8000:8000 img_cls:latest
             # echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart image-classification
