@@ -1,4 +1,4 @@
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings,
 from pydantic import ConfigDict
 
 
@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     loss_plot_file_name: str = "loss_plot.png"
     accuracy_plot_file_name: str = "accuracy_plot.png"
 
-    model_config = ConfigDict(env_file=".env")
+    model_config = ConfigDict(env_file=".env", extra='allow')
 
 
 settings = Settings()
