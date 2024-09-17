@@ -37,6 +37,7 @@ jobs:
   #         python-version: "3.12"
   #     - name: update pip
   #       run: python -m pip install --upgrade pip
+
   #     - name: install
   #       run: make install
   #     - name: test
@@ -110,6 +111,7 @@ jobs:
           username: ${{secrets.PROD_USERNAME}}
           password: ${{secrets.PROD_PASSWORD}}
           script: |
+            cd /root/image-classification
             docker build -t img_cls:latest .
             docker run --rm -p 8000:8000 img_cls:latest
             # echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart image-classification
