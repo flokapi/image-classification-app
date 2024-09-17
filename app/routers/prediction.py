@@ -5,7 +5,6 @@ import asyncio
 from app.htmx import htmx
 from app.operations import image
 
-
 import app.cnn.cnn_prediction as cnn
 import app.operations.plot_predictions as plot
 

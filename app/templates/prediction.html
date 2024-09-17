@@ -4,7 +4,7 @@
   <div class="m-4 space-y-12">
     <div>
       <p class="text-xl font-bold mb-4">Image Selection</p>
-      <div class="mt-6 ml-2">
+      <div class="flex flex-row items-start mt-6 ml-2">
         <input
           id="file-upload"
           type="file"
@@ -13,11 +13,14 @@
           hx-target="#prediction-result"
           hx-swap="innerHTML"
           hx-encoding="multipart/form-data"
+          hx-indicator="#indicator"
           enctype="multipart/form-data"
           class="file:border file:border-gray-300 file:bg-gray-100 file:mr-4 file:py-2 file:px-4 file:rounded-md file:text-sm file:font-medium file:text-gray-700 file:hover:bg-gray-200"
         />
+        <div id="indicator" class="htmx-indicator loader" />
       </div>
     </div>
+
     <div id="prediction-result"></div>
   </div>
 </div>
