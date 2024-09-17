@@ -29,14 +29,28 @@ jobs:
     steps:
       - name: pulling git repo
         uses: actions/checkout@v2
+
       - name: Install packages
         run: sudo apt-get update && sudo apt-get install -y libgl1-mesa-glx
+
       - name: Install python version 3.12
         uses: actions/setup-python@v2
         with:
           python-version: "3.12"
+
       - name: update pip
         run: python -m pip install --upgrade pip
+
+      - name: Make app envfile
+        uses: SpicyPizza/create-envfile@v1
+        with:
+          envkey_TF_MODEL_EPOCHS: ${{ vars.TF_MODEL_EPOCHS }}
+          envkey_IMAGE_SIZE_X: ${{ vars.IMAGE_SIZE_X }}
+          envkey_IMAGE_SIZE_Y: ${{ vars.IMAGE_SIZE_Y }}
+          directory: .
+          file_name: .env
+          fail_on_empty: false
+          sort_keys: false
 
       - name: install
         run: make install
@@ -65,6 +79,7 @@ jobs:
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/img_cls:latest
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
 
@@ -77,7 +92,6 @@ jobs:
     steps:
       # - name: pulling git repo
       #   uses: actions/checkout@v2
-
       # - name: Make app envfile
       #   uses: SpicyPizza/create-envfile@v1
       #   with:
