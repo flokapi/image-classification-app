@@ -14,10 +14,10 @@ from pathlib import Path
 from app.config import settings
 
 
-STATIC_FILES_LOCATION = Path(settings.static_files_location)
-TF_MODEL_PATH = STATIC_FILES_LOCATION.joinpath(settings.tf_model_file_name)
-LOSS_PLOT_PATH = STATIC_FILES_LOCATION.joinpath(settings.loss_plot_file_name)
-ACCURACY_PLOT_PATH = STATIC_FILES_LOCATION.joinpath(
+FILES_LOCATION = Path("./files")
+TF_MODEL_PATH = FILES_LOCATION.joinpath(settings.tf_model_file_name)
+LOSS_PLOT_PATH = FILES_LOCATION.joinpath(settings.loss_plot_file_name)
+ACCURACY_PLOT_PATH = FILES_LOCATION.joinpath(
     settings.accuracy_plot_file_name)
 TF_MODEL_EPOCHS = settings.tf_model_epochs
 IMAGE_SIZE_X = settings.image_size_x

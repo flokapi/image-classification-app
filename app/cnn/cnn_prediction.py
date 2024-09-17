@@ -6,12 +6,12 @@ from pathlib import Path
 from app.config import settings
 
 
+FILES_LOCATION = Path("./files")
 TF_MODEL_FILE_NAME = settings.tf_model_file_name
-STATIC_FILES_LOCATION = settings.static_files_location
 IMAGE_SIZE_X = settings.image_size_x
 IMAGE_SIZE_Y = settings.image_size_y
 
-MODEL_PATH = Path(STATIC_FILES_LOCATION).joinpath(TF_MODEL_FILE_NAME)
+MODEL_PATH = FILES_LOCATION.joinpath(TF_MODEL_FILE_NAME)
 
 model = None
 
