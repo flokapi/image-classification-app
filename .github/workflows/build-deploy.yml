@@ -84,6 +84,15 @@ jobs:
       - name: pulling git repo
         uses: actions/checkout@v2
 
+      - name: SCP repo to remote server
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.PROD_HOST }}
+          username: ${{ secrets.PROD_USERNAME }}
+          password: ${{ secrets.PROD_PASSWORD }}
+          source: "./*"
+          target: "/root/image-classification"
+
       - name: deploy to ubuntu server
         uses: appleboy/ssh-action@master
         with:
@@ -91,8 +100,6 @@ jobs:
           username: ${{secrets.PROD_USERNAME}}
           password: ${{secrets.PROD_PASSWORD}}
           script: |
-            cd /root/image-classification
-            git pull
             echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart image-classification
       # login to our ubuntu
       # cd /app/src
