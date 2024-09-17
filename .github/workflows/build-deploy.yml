@@ -70,7 +70,7 @@ jobs:
 
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: tensorflow/tensorflow:latest
     # needs: [test]
     environment:
       name: production
