@@ -83,7 +83,7 @@ jobs:
           envkey_TF_MODEL_EPOCHS: ${{ vars.TF_MODEL_EPOCHS }}
           envkey_IMAGE_SIZE_X: ${{ vars.IMAGE_SIZE_X }}
           envkey_IMAGE_SIZE_Y: ${{ vars.IMAGE_SIZE_Y }}
-          directory: image-classification
+          directory: .
           file_name: .env
           fail_on_empty: false
           sort_keys: false
