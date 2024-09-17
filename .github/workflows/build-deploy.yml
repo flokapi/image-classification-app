@@ -55,6 +55,9 @@ jobs:
       - name: install
         run: make install
 
+      - name: build static files
+        run: make build-static-files
+
       - name: test
         run: make test
 
