@@ -13,13 +13,13 @@
           Refresh
         </button> -->
     <div
-      hx-get="{{ request.url }}plot"
+      hx-get="{{ request.url.path }}plot"
       hx-trigger="load"
       hx-target="#plot-img"
       hx-swap="outerHTML"
     ></div>
     <div
-      hx-get="{{ request.url }}plot"
+      hx-get="{{ request.url.path }}plot"
       hx-trigger="every 5s"
       hx-target="#plot-img"
       hx-swap="outerHTML"

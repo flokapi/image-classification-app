@@ -10,7 +10,7 @@
           type="file"
           name="file"
           id="upload-form"
-          hx-post="{{ request.url }}hx-predict"
+          hx-post="{{ request.url.path }}hx-predict"
           hx-target="#prediction-result"
           hx-swap="innerHTML"
           hx-encoding="multipart/form-data"
