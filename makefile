@@ -3,7 +3,8 @@
 
 install:
 	pip install -r requirements.txt
-	pip install tensorflow pytest
+	pip install tensorflow
+	pip install pytest
 	npm install tailwindcss
 
 
