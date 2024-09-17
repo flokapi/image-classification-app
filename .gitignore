@@ -165,6 +165,7 @@ node_modules/*
 
 static/*
 !static/.gitkeep
+!static/custom_styles.css
 
 files/*
 !files/.gitkeep

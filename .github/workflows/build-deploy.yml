@@ -142,7 +142,8 @@ jobs:
             # docker build -t img_cls:latest .
             # docker run -p 8000:8000 -d --name img_cls_cont img_cls:latest
 
-            docker run -p 8000:8000 -d --name img_cls_cont ${{ secrets.DOCKER_HUB_USERNAME }}/img_cls:latest
+            docker pull ${{secrets.DOCKER_HUB_USERNAME}}/img_cls:latest
+            docker run -p 8000:8000 -d --name img_cls_cont ${{secrets.DOCKER_HUB_USERNAME}}/img_cls:latest
 
             docker image prune -af
             # echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart image-classification
