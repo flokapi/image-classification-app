@@ -3,7 +3,7 @@ name: Build and Deploy Code
 on: [push, pull_request]
 
 jobs:
-  test:
+  build:
     environment:
       name: testing
     env:
@@ -89,7 +89,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: [test]
+    needs: [build]
     environment:
       name: production
     steps:
