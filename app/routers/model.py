@@ -1,10 +1,8 @@
 from fastapi import APIRouter, Request, Header
 from fastapi.responses import FileResponse
+import hotmix as hm
 
-from app.templates import templates
 from app.operations import plot_predictions as plot
-
-from app.htmx import htmx
 from app.config import settings
 
 
@@ -17,7 +15,7 @@ router = APIRouter(prefix="/model", tags=["Model"])
 
 
 @router.get("/")
-@htmx("model")
+@hm.htmx("model")
 async def hx_get_main(request: Request):
     return {
         "model_file_name": TF_MODEL_FILE_NAME,

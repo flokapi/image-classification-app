@@ -2,10 +2,11 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 
 from .routers import model, prediction, history
-from .htmx import htmx
+import hotmix as hm
 
 
 app = FastAPI()
+hm.init("app/templates")
 
 app.mount("/static", StaticFiles(directory="static"))
 app.mount("/files", StaticFiles(directory="files"))
@@ -16,6 +17,6 @@ app.include_router(history.router)
 
 
 @app.get("/")
-@htmx("index")
+@hm.htmx("index")
 async def index(request: Request):
     pass
