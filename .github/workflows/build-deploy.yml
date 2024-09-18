@@ -135,7 +135,6 @@ jobs:
           username: ${{secrets.PROD_USERNAME}}
           password: ${{secrets.PROD_PASSWORD}}
           script: |
-            cd /root/image-classification
             docker ps -q --filter "name=img_cls_cont" | xargs -r docker stop
             docker ps -a -q --filter "name=img_cls_cont" | xargs -r docker rm
 
@@ -146,4 +145,3 @@ jobs:
             docker run -p 8000:8000 -d --name img_cls_cont ${{secrets.DOCKER_HUB_USERNAME}}/img_cls:latest
 
             docker image prune -af
-            # echo ${{secrets.PROD_PASSWORD}} | sudo -S systemctl restart image-classification
