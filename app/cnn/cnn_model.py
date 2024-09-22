@@ -175,9 +175,9 @@ def evaluate_model_props(test_data, model):
     # print(pre.result(), re.result(), acc.result())
 
     model_properties = {
-        "precision": pre.result(),
-        "recall": re.result(),
-        "accuracy": acc.result()
+        "precision": pre.result().numpy(),
+        "recall": re.result().numpy(),
+        "accuracy": acc.result().numpy()
     }
 
     return model_properties

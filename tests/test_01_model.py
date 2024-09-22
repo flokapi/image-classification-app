@@ -4,13 +4,16 @@ import app.cnn.cnn_model as cnn
 
 
 def test_model_creation():
-    # cnn.init_hardware()
-    # train_data, test_data, validation_data = cnn.init_data()
-    # model = cnn.create_model()
-    # hist = cnn.fit_model(model, train_data, validation_data)
-    # props = cnn.evaluate_model_props(hist, test_data, model)
-
     model, props = cnn.prepare_model()
+
     print(props)
-    # [todo]: extract and check model properties
+    print("#### Model properties")
+    print(f"#### Precision: {props['precision']}")
+    print(f"#### Accuracy: {props['accuracy']}")
+    print(f"#### Recall: {props['recall']}")
+
+    assert props["precision"] > 0.9
+    assert props["accuracy"] > 0.9
+    assert props["recall"] > 0.9
+
     assert True
