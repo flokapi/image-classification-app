@@ -8,11 +8,9 @@ import app.cnn.cnn_prediction as cnn
 import app.operations.plot_predictions as plot
 
 
-router = APIRouter(prefix="/prediction",
-                   tags=["Prediction"])
+router = APIRouter(prefix="/prediction", tags=["Prediction"])
 
-executor = ProcessPoolExecutor(
-    max_workers=4, initializer=cnn.initialize)
+executor = ProcessPoolExecutor(max_workers=4, initializer=cnn.initialize)
 
 
 async def run(fun, *args, **kwargs):

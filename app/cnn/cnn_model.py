@@ -17,8 +17,7 @@ from app.config import settings
 FILES_LOCATION = Path("./files")
 TF_MODEL_PATH = FILES_LOCATION.joinpath(settings.tf_model_file_name)
 LOSS_PLOT_PATH = FILES_LOCATION.joinpath(settings.loss_plot_file_name)
-ACCURACY_PLOT_PATH = FILES_LOCATION.joinpath(
-    settings.accuracy_plot_file_name)
+ACCURACY_PLOT_PATH = FILES_LOCATION.joinpath(settings.accuracy_plot_file_name)
 TF_MODEL_EPOCHS = settings.tf_model_epochs
 IMAGE_SIZE_X = settings.image_size_x
 IMAGE_SIZE_Y = settings.image_size_y
