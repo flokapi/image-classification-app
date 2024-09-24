@@ -1,28 +1,24 @@
-
 import pytest
 
-from selenium import webdriver
-from selenium.webdriver.firefox.service import Service as FirefoxService
-from webdriver_manager.firefox import GeckoDriverManager
+from app.cnn import cnn_prediction
 
-
-from app.cnn.cnn_prediction import initialize
-from . import utils
+from tests.utils import uvicorn_server, selenium_driver
+from tests.config import settings
 
 
 @pytest.fixture(scope="module")
 def cnn_model():
-    initialize()
+    cnn_prediction.initialize()
 
 
-@pytest.fixture
-def uvicorn():
-    pid = utils.start_uvicorn()
+@pytest.fixture(scope="module")
+def server():
+    uvicorn_server.start()
     yield
-    utils.stop_uvicorn(pid)
+    uvicorn_server.stop()
 
 
 @pytest.fixture
-def driver(uvicorn):
-    yield webdriver.Firefox(
-        service=FirefoxService(GeckoDriverManager().install()))
+def driver(server):
+    yield selenium_driver.create()
+    selenium_driver.stop()

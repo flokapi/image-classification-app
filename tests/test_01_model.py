@@ -1,5 +1,3 @@
-
-
 import app.cnn.cnn_model as cnn
 
 
@@ -15,5 +13,3 @@ def test_model_creation():
     assert props["precision"] > 0.9
     assert props["accuracy"] > 0.9
     assert props["recall"] > 0.9
-
-    assert True

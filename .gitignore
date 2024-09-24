@@ -170,6 +170,10 @@ static/*
 files/*
 !files/.gitkeep
 
+.driver_path
+
+
+
 NOTES.md
 test_files/
 tmp/

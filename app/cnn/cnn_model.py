@@ -139,7 +139,7 @@ def create_training_data_plots(hist):
 
     fig, ax = plt.subplots()
     ax.plot(hist.history['loss'], color='teal', label='loss')
-    ax.plot(hist.history['val_loss'], color='orange', label='val_loss')
+    ax.plot(hist.history['val_loss'], color='orange', label='validation_loss')
     ax.set_title('Loss', fontsize=20)
     ax.set_xlabel('Epoch')
     ax.set_ylabel('Loss')
@@ -150,7 +150,8 @@ def create_training_data_plots(hist):
 
     fig, ax = plt.subplots()
     ax.plot(hist.history['accuracy'], color='teal', label='accuracy')
-    ax.plot(hist.history['val_accuracy'], color='orange', label='val_accuracy')
+    ax.plot(hist.history['val_accuracy'],
+            color='orange', label='validation_accuracy')
     ax.set_title('Accuracy', fontsize=20)
     ax.set_xlabel('Epoch')
     ax.set_ylabel('Accuracy')
@@ -171,8 +172,6 @@ def evaluate_model_props(test_data, model):
         pre.update_state(y, yhat)
         re.update_state(y, yhat)
         acc.update_state(y, yhat)
-
-    # print(pre.result(), re.result(), acc.result())
 
     model_properties = {
         "precision": pre.result().numpy(),

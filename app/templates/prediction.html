@@ -6,7 +6,7 @@
       <p class="text-xl font-bold mb-4">Image Selection</p>
       <div class="flex flex-row items-start mt-6 ml-2">
         <input
-          id="file-upload"
+          id="image-upload"
           type="file"
           name="file"
           hx-post="{{ request.url.path }}hx-predict"
@@ -20,7 +20,6 @@
         <div id="indicator" class="htmx-indicator loader" />
       </div>
     </div>
-
     <div id="prediction-result"></div>
   </div>
 </div>
