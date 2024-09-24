@@ -6,6 +6,7 @@ from tests.utils import uvicorn_server, selenium_driver
 from tests.config import settings
 
 
+# load the model from the keras file
 @pytest.fixture(scope="module")
 def cnn_model():
     cnn_prediction.initialize()
@@ -19,6 +20,6 @@ def server():
 
 
 @pytest.fixture
-def driver(server):
+def ui_driver(server):
     yield selenium_driver.create()
     selenium_driver.stop()

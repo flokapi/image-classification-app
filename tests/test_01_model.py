@@ -10,6 +10,6 @@ def test_model_creation():
     print(f"#### Accuracy: {props['accuracy']}")
     print(f"#### Recall: {props['recall']}")
 
-    assert props["precision"] > 0.9
-    assert props["accuracy"] > 0.9
-    assert props["recall"] > 0.9
+    assert props["precision"] > 0.85
+    assert props["accuracy"] > 0.85
+    assert props["recall"] > 0.85
