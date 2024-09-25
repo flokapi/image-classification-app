@@ -4,7 +4,6 @@ import app.cnn.cnn_model as cnn
 def test_model_creation():
     model, props = cnn.prepare_model()
 
-    print(props)
     print("#### Model properties")
     print(f"#### Precision: {props['precision']}")
     print(f"#### Accuracy: {props['accuracy']}")
