@@ -12,7 +12,7 @@ class SeleniumDriver:
     def __init__(self, _driver_path_path: str):
         self.driver_path_path = Path(_driver_path_path)
 
-    def get_or_create_driver_path(self) -> str:
+    def _get_or_create_driver_path(self) -> str:
 
         if not self.driver_path_path.exists() or not Path(self.driver_path_path.read_text()).exists():
             driver_path = GeckoDriverManager().install()
@@ -23,7 +23,7 @@ class SeleniumDriver:
         return driver_path
 
     def create(self) -> webdriver.Firefox:
-        driver_path = self.get_or_create_driver_path()
+        driver_path = self._get_or_create_driver_path()
         self.driver = webdriver.Firefox(service=FirefoxService(driver_path))
         return self.driver
 
