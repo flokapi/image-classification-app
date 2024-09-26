@@ -1,4 +1,6 @@
 import pytest
+import time
+
 
 from tests.utils import UvicornServer, SeleniumDriver
 from tests.config import settings
@@ -12,6 +14,7 @@ DRIVER_PATH_PATH = settings.driver_path_path
 def server():
     uv_server = UvicornServer(LOCAL_TEST_PORT)
     uv_server.start()
+    time.sleep(0.2)
     yield
 
 

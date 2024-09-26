@@ -28,12 +28,21 @@ build: build-static-files build-model
 
 ################## Test
 
-test-predictions:
-	@pytest tests/test_02_predictions.py -v -s -x --disable-warnings
+PYTEST_FLAGS = -v -s -x --disable-warnings
+
+
+test-cnn:
+	@pytest tests/test_01_cnn $(PYTEST_FLAGS)
+
+test-api:
+	@pytest tests/test_02_api $(PYTEST_FLAGS)
+
+test-ui:
+	@pytest tests/test_03_ui $(PYTEST_FLAGS)
 
 
 test:
-	@pytest -v -s -x --disable-warnings
+	@pytest $(PYTEST_FLAGS)
 
 
 
