@@ -1,12 +1,6 @@
 import pytest
 
-
-from tests.utils import uvicorn_server
-
-from tests.utils.uvicorn_server import UvicornServer
-from tests.utils.selenium_driver import SeleniumDriver
-
-
+from tests.utils import UvicornServer, SeleniumDriver
 from tests.config import settings
 
 
