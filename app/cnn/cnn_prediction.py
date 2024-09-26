@@ -13,6 +13,7 @@ IMAGE_SIZE_Y = settings.image_size_y
 
 MODEL_PATH = FILES_LOCATION.joinpath(TF_MODEL_FILE_NAME)
 
+
 model = None
 
 

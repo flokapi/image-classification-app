@@ -1,10 +1,10 @@
 from tensorflow.keras.models import load_model
 from tensorflow.keras.metrics import Precision, Recall, BinaryAccuracy
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropout
+from tensorflow.keras.layers import Conv2D, Input, MaxPooling2D, Dense, Flatten, Dropout
 from tensorflow.keras.models import Sequential
 from matplotlib import pyplot as plt
 import numpy as np
-import imghdr
+import filetype
 import cv2
 import tensorflow as tf
 import os
@@ -46,7 +46,7 @@ def init_data():
                 image_path = os.path.join(data_dir, image_class, image)
                 try:
                     img = cv2.imread(image_path)
-                    tip = imghdr.what(image_path)
+                    tip = filetype.guess(image_path).extension
                     if tip not in image_exts:
                         print('Image not in ext list {}'.format(image_path))
                         os.remove(image_path)
@@ -101,8 +101,8 @@ def create_model():
 
     model = Sequential()
 
-    model.add(Conv2D(16, (3, 3), 1, activation='relu',
-                     input_shape=(im_size_x, im_size_y, 3)))
+    model.add(Input(shape=(im_size_x, im_size_y, 3)))
+    model.add(Conv2D(16, (3, 3), 1, activation='relu'))
     model.add(MaxPooling2D())
     model.add(Conv2D(32, (3, 3), 1, activation='relu'))
     model.add(MaxPooling2D())

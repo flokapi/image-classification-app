@@ -2,15 +2,21 @@ from fastapi import APIRouter, File, UploadFile, Request
 from concurrent.futures import ProcessPoolExecutor
 import asyncio
 import hotmix as hm
+import atexit
 
 from app.operations import image
 import app.cnn.cnn_prediction as cnn
 import app.operations.plot_predictions as plot
 
 
+import multiprocessing
+multiprocessing.set_start_method('spawn')
+
+
 router = APIRouter(prefix="/prediction", tags=["Prediction"])
 
-executor = ProcessPoolExecutor(max_workers=4, initializer=cnn.initialize)
+executor = ProcessPoolExecutor(max_workers=2, initializer=cnn.initialize)
+atexit.register(executor.shutdown)
 
 
 async def run(fun, *args, **kwargs):
