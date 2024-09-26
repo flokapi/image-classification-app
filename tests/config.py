@@ -5,10 +5,12 @@ import os
 class Settings():
     workdir: str
     local_test_port: int
+    driver_path_path: str
 
     def __init__(self):
         self.workdir = os.getcwd()
         self.local_test_port = self.find_available_port()
+        self.driver_path_path = ".driver_path"
 
     def find_available_port(self):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:

@@ -1,39 +1,32 @@
 
 from pathlib import Path
-import atexit
 
 from selenium import webdriver
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from webdriver_manager.firefox import GeckoDriverManager
 
 
-DRIVER_PATH_PATH = Path(".driver_path")
+class SeleniumDriver:
+    driver_path_path: Path
+    driver: webdriver.Firefox
 
-driver = None
+    def __init__(self, _driver_path_path: str):
+        self.driver_path_path = Path(_driver_path_path)
 
+    def get_or_create_driver_path(self) -> str:
 
-def get_or_create_driver_path():
-    if not DRIVER_PATH_PATH.exists() or not Path(DRIVER_PATH_PATH.read_text()).exists():
-        driver_path = GeckoDriverManager().install()
-        DRIVER_PATH_PATH.write_text(driver_path)
-    else:
-        driver_path = DRIVER_PATH_PATH.read_text()
+        if not self.driver_path_path.exists() or not Path(self.driver_path_path.read_text()).exists():
+            driver_path = GeckoDriverManager().install()
+            self.driver_path_path.write_text(driver_path)
+        else:
+            driver_path = self.driver_path_path.read_text()
 
-    return driver_path
+        return driver_path
 
+    def create(self) -> webdriver.Firefox:
+        driver_path = self.get_or_create_driver_path()
+        self.driver = webdriver.Firefox(service=FirefoxService(driver_path))
+        return self.driver
 
-def create():
-    global driver
-    driver_path = get_or_create_driver_path()
-    driver = webdriver.Firefox(service=FirefoxService(driver_path))
-    return driver
-
-
-def stop():
-    global driver
-    if driver:
-        driver.quit()
-        driver = None
-
-
-atexit.register(stop)
+    def quit(self):
+        self.driver.quit()

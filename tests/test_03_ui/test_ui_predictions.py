@@ -24,7 +24,7 @@ def prediction_test(ui_driver, image_path, exp):
             EC.presence_of_element_located((By.ID, 'prediction-result'))
         )
     except:
-        raise Exception("Could not detect the prediction result")
+        pytest.fail("Could not detect the prediction result")
 
     try:
         text_element = WebDriverWait(ui_driver, 10).until(
@@ -32,7 +32,7 @@ def prediction_test(ui_driver, image_path, exp):
                 (By.ID, 'prediction-result'), f"Result: {exp}")
         )
     except:
-        raise Exception("Could not find the expected result")
+        pytest.fail("Could not find the expected result")
 
 
 @pytest.mark.parametrize("image_path, exp", prediciton_set_1[:2])

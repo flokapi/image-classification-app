@@ -1,48 +1,14 @@
-import subprocess
-import atexit
-import time
-
-
-import asyncio
 import uvicorn
-import threading
-from tests.config import settings
-import signal
+from threading import Thread
 
 
-PORT = settings.local_test_port
+class UvicornServer(Thread):
+    port: int
 
+    def __init__(self, _port):
+        super().__init__()
+        self.port = _port
 
-# uvicorn_ps = None
-
-
-# def start():
-#     global uvicorn_ps
-#     uvicorn_ps = subprocess.Popen(
-#         ["uvicorn", "app.main:app", "--port", f"{PORT}"])
-#     time.sleep(0.5)
-
-
-# def stop():
-#     if uvicorn_ps:
-#         uvicorn_ps.terminate()
-#         uvicorn_ps.wait(timeout=5)
-
-#         if uvicorn_ps.poll() is not None:
-#             uvicorn_ps.kill()
-
-
-# atexit.register(stop)
-
-
-def start_uvicorn():
-    uvicorn.run("app.main:app", host="127.0.0.1", port=PORT, log_level="info")
-
-
-def start():
-    uvicorn_thread = threading.Thread(target=start_uvicorn)
-    uvicorn_thread.start()
-
-
-def stop():
-    pass
+    def run(self):
+        uvicorn.run("app.main:app", host="127.0.0.1",
+                    port=self.port, log_level="info")
