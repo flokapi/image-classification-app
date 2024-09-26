@@ -50,3 +50,9 @@ test:
 
 dev:
 	@uvicorn app.main:app --reload
+
+
+################## Act
+
+act:
+	@act --var-file .env --secret-file .secrets

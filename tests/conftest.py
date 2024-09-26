@@ -1,8 +1,10 @@
 import pytest
-import os
-import signal
+import sys
+
+import pprint
 
 
 @pytest.hookimpl()
 def pytest_unconfigure(config):
-    os.kill(os.getpid(), signal.SIGTERM)
+    reporter = config.pluginmanager.get_plugin('terminalreporter')
+    sys.exit(reporter._session.exitstatus)

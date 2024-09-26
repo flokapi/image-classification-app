@@ -172,7 +172,7 @@ files/*
 
 .driver_path
 
-
+.secrets
 
 NOTES.md
 test_files/
