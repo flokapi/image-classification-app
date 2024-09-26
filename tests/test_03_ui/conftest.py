@@ -14,8 +14,8 @@ DRIVER_PATH_PATH = settings.driver_path_path
 def server():
     uv_server = UvicornServer(LOCAL_TEST_PORT)
     uv_server.start()
-    time.sleep(0.2)
     yield
+    uv_server.stop()
 
 
 @pytest.fixture
